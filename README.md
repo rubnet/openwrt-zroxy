@@ -36,7 +36,8 @@ When connecting to a domain through TLS/HTTPS the initial TCP session contain th
 - auto reload whitelist
 - Multi-thread
 - Etc.
-
+- for openwrt
+  
 #  Usage
 ## Command Details
 ```
