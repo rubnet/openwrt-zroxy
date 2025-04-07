@@ -51,7 +51,7 @@ jobs:
           make package/zroxy/{clean,compile}  V=s
 
       - name: Upload compiled zroxy firmware
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: openwrt-firmware
           path: openwrt/bin/
