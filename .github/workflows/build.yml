@@ -81,7 +81,7 @@ jobs:
           export CC="aarch64-openwrt-linux-musl -static -Os"
           cmake .
           
-          [-f ./configure ]&&./configure  --host=$openwrt_architecture_host --enable-static
+          [ -f ./configure ]&&./configure  --host=$openwrt_architecture_host --enable-static
           
           make CC=aarch64-openwrt-linux-musl LD=aarch64-openwrt-linux-musl-ld 
           ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/*
