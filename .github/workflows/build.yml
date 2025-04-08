@@ -19,7 +19,7 @@ jobs:
       - name: Set up OpenWRT build environment
         run: |
           sudo apt update
-          sudo apt install gcc-arm-none-eabi
+          #sudo apt install gcc-arm-none-eabi
           #sudo apt install -y build-essential libncurses5-dev gawk zlib1g-dev asciidoc binutils
           
 
@@ -30,25 +30,15 @@ jobs:
           [ -d openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64 ] || tar -xf openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
           cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
           #ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl*
-          ls staging_dir/*
-          openwrt_sdk_folder=$(pwd)
-          openwrt_architecture_host=aarch64-openwrt-linux-musl
-          #arm-openwrt-linux-muslgnueabi
-          openwrt_toolchain=toolchain-aarch64_cortex-a53_gcc-8.4.0_musl
-          PATH="$PATH:$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/bin/"
-          export PATH
-          
-          STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
-          export STAGING_DIR
-          echo '/home/runner/work/openwrt-zroxy/openwrt-zroxy/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64----------------------------------------------------------------------'
-          ls $STAGING_DIR/bin/*
+          #ls staging_dir/*
+
           
           #git clone https://github.com/openwrt/openwrt.git
           #cd openwrt
           #git branch -a
           #git tag
           #git checkout openwrt-21.02
-          ./scripts/feeds update -a
+          #./scripts/feeds update -a
           #./scripts/feeds install -a
 
       - name: Clone zroxy repository
@@ -58,7 +48,8 @@ jobs:
 
       - name: Automate Configure OpenWRT
         run: |
-          cd $openwrt_sdk_folder/zroxy
+          openwrt_architecture_host=aarch64-openwrt-linux-musl
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/zroxy
           ./configure  --host=$openwrt_architecture_host --enable-static
 
           # make menuconfig
@@ -70,11 +61,22 @@ jobs:
       - name: Compile OpenWRT with zroxy package
         run: |
           cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
+          
+          openwrt_sdk_folder=$(pwd)
+          openwrt_toolchain=toolchain-aarch64_cortex-a53_gcc-8.4.0_musl
+          PATH="$PATH:$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/bin/"
+          export PATH
+          
+          STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
+          export STAGING_DIR
+          echo '/home/runner/work/openwrt-zroxy/openwrt-zroxy/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64----------------------------------------------------------------------'
+          ls $STAGING_DIR/bin/*
+          
           #make package/zroxy/{clean,compile}  V=s
-          export CC="arm-openwrt-linux-muslgnueabi-gcc -static -Os"
+          export CC="aarch64-openwrt-linux-musl -static -Os"
           cmake ..
-          make package/zroxy/compile CC=arm-openwrt-linux-muslgnueabi-gcc LD=arm-openwrt-linux-muslgnueabi-ld 
-          ls $openwrt_sdk_folder/*
+          make package/zroxy/compile CC=aarch64-openwrt-linux-musl LD=aarch64-openwrt-linux-musl-ld 
+          ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/*
 
       - name: Upload compiled zroxy firmware
         uses: actions/upload-artifact@v4
