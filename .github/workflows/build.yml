@@ -19,15 +19,27 @@ jobs:
       - name: Set up OpenWRT build environment
         run: |
           sudo apt update
+          sudo apt install gcc-arm-none-eabi
           #sudo apt install -y build-essential libncurses5-dev gawk zlib1g-dev asciidoc binutils
+          
 
       - name: Clone OpenWRT repo
         run: |
           rm -rf openwrt
-          [-f openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz ] || wget https://downloads.openwrt.org/releases/21.02.7/targets/mvebu/cortexa53/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-          tar -xf openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-          #cd openwrt-sdk*
-          ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl*
+          [ -f openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz ] || wget https://downloads.openwrt.org/releases/21.02.7/targets/mvebu/cortexa53/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+          [ -d openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64 ] || tar -xf openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
+          #ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl*
+          ls staging_dir/*
+          openwrt_sdk_folder=~/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/
+          openwrt_architecture_host=arm-openwrt-linux-muslgnueabi
+          openwrt_toolchain=toolchain-arm_cortex-a53+vfpv3-d16_gcc-8.4.0_musl_eabi
+          PATH="$PATH:$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/bin/"
+          export PATH
+          
+          STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
+          export STAGING_DIR
+          
           #git clone https://github.com/openwrt/openwrt.git
           #cd openwrt
           #git branch -a
@@ -38,12 +50,12 @@ jobs:
 
       - name: Clone zroxy repository
         run: |
-          cd openwrt-sdk*/package
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/package
           git clone https://github.com/0x7a657573/zroxy.git
 
       - name: Automate Configure OpenWRT
         run: |
-          cd openwrt-sdk*
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
           # make menuconfig
           grep zroxy .config
           # For example, enabling zroxy package via configuration
@@ -52,12 +64,15 @@ jobs:
 
       - name: Compile OpenWRT with zroxy package
         run: |
-          cd openwrt-sdk*
-          make package/zroxy/{clean,compile}  V=s
-          ls *
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
+          #make package/zroxy/{clean,compile}  V=s
+          export CC="musl-gcc -static -Os"
+          cmake ..
+          make package/zroxy/compile CC=arm-openwrt-linux-muslgnueabi-gcc LD=arm-openwrt-linux-muslgnueabi-ld 
+          ls */*
 
       - name: Upload compiled zroxy firmware
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-firmware
-          path: openwrt-sdk*/bin/
+          path: openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/bin/
