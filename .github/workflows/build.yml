@@ -66,7 +66,7 @@ jobs:
         run: |
           cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
           #make package/zroxy/{clean,compile}  V=s
-          export CC="musl-gcc -static -Os"
+          export CC="arm-openwrt-linux-muslgnueabi-gcc -static -Os"
           cmake ..
           make package/zroxy/compile CC=arm-openwrt-linux-muslgnueabi-gcc LD=arm-openwrt-linux-muslgnueabi-ld 
           ls */*
