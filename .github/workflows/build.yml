@@ -69,7 +69,7 @@ jobs:
           
           STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
           export STAGING_DIR
-          echo '/home/runner/work/openwrt-zroxy/openwrt-zroxy/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64----------------------------------------------------------------------'
+          echo '/home/runner/work/zroxy/zroxy/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64----------------------------------------------------------------------'
           ls $STAGING_DIR/bin/*
           
           #make package/zroxy/{clean,compile}  V=s
