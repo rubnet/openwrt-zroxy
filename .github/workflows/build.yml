@@ -84,10 +84,10 @@ jobs:
           [ -f ./configure ]&&./configure  --host=$openwrt_architecture_host --enable-static
           
           make CC=aarch64-openwrt-linux-musl-gcc LD=aarch64-openwrt-linux-musl-ld 
-          ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/*
+          ls *
 
       - name: Upload compiled zroxy firmware
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-firmware
-          path: openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/bin/
+          path: openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/zroxy
