@@ -26,7 +26,7 @@ jobs:
           rm -rf openwrt
           [-f openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz ] || wget https://downloads.openwrt.org/releases/21.02.7/targets/mvebu/cortexa53/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
           tar -xf openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-          cd openwrt*
+          cd openwrt-sdk*
           ls *
           #git clone https://github.com/openwrt/openwrt.git
           #cd openwrt
@@ -38,12 +38,12 @@ jobs:
 
       - name: Clone zroxy repository
         run: |
-          cd openwrt*/package
+          cd openwrt-sdk*/package
           git clone https://github.com/0x7a657573/zroxy.git
 
       - name: Automate Configure OpenWRT
         run: |
-          cd openwrt*
+          cd openwrt-sdk*
           # make menuconfig
           grep zroxy .config
           # For example, enabling zroxy package via configuration
@@ -52,7 +52,7 @@ jobs:
 
       - name: Compile OpenWRT with zroxy package
         run: |
-          cd openwrt*
+          cd openwrt-sdk*
           make package/zroxy/{clean,compile}  V=s
           ls *
 
@@ -60,4 +60,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-firmware
-          path: openwrt*/bin/
+          path: openwrt-sdk*/bin/
