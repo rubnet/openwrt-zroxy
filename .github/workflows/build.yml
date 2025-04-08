@@ -43,7 +43,8 @@ jobs:
 
       - name: Clone zroxy repository
         run: |
-          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/package
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
+          # /package
           git clone https://github.com/0x7a657573/zroxy.git
 
       - name: Automate Configure OpenWRT
