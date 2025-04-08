@@ -31,7 +31,7 @@ jobs:
           cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
           #ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl*
           ls staging_dir/*
-          openwrt_sdk_folder=~/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/
+          openwrt_sdk_folder=$(pwd)
           openwrt_architecture_host=aarch64-openwrt-linux-musl
           #arm-openwrt-linux-muslgnueabi
           openwrt_toolchain=toolchain-aarch64_cortex-a53_gcc-8.4.0_musl
@@ -40,9 +40,8 @@ jobs:
           
           STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
           export STAGING_DIR
-          echo '---------------------------------------------------------------------------------------------------------------------------------------------'
-          pwd
-          #ls $STAGING_DIR/*
+          echo '/home/runner/work/openwrt-zroxy/openwrt-zroxy/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64----------------------------------------------------------------------'
+          ls $STAGING_DIR/bin/*
           
           #git clone https://github.com/openwrt/openwrt.git
           #cd openwrt
@@ -59,7 +58,9 @@ jobs:
 
       - name: Automate Configure OpenWRT
         run: |
-          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
+          cd $openwrt_sdk_folder/zroxy
+          ./configure  --host=$openwrt_architecture_host --enable-static
+
           # make menuconfig
           #grep zroxy .config
           # For example, enabling zroxy package via configuration
@@ -73,7 +74,7 @@ jobs:
           export CC="arm-openwrt-linux-muslgnueabi-gcc -static -Os"
           cmake ..
           make package/zroxy/compile CC=arm-openwrt-linux-muslgnueabi-gcc LD=arm-openwrt-linux-muslgnueabi-ld 
-          ls */*
+          ls $openwrt_sdk_folder/*
 
       - name: Upload compiled zroxy firmware
         uses: actions/upload-artifact@v4
