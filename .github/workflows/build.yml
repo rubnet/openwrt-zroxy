@@ -41,7 +41,7 @@ jobs:
           STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
           export STAGING_DIR
 
-          ls $STAGING_DIR/bin/*
+          ls $STAGING_DIR/*
           
           #git clone https://github.com/openwrt/openwrt.git
           #cd openwrt
