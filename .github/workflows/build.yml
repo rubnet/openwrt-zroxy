@@ -43,15 +43,14 @@ jobs:
 
       - name: Clone zroxy repository
         run: |
-          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
-          # /package
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/
           git clone https://github.com/0x7a657573/zroxy.git
 
       - name: Automate Configure OpenWRT
         run: |
           openwrt_architecture_host=aarch64-openwrt-linux-musl
           cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/zroxy
-          ./configure  --host=$openwrt_architecture_host --enable-static
+          #./configure  --host=$openwrt_architecture_host --enable-static
 
           # make menuconfig
           #grep zroxy .config
@@ -60,8 +59,10 @@ jobs:
           #grep zroxy .config
 
       - name: Compile OpenWRT with zroxy package
-        run: |
-          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
+        run: | 
+          
+          
+          openwrt_architecture_host=aarch64-openwrt-linux-musl
           
           openwrt_sdk_folder=$(pwd)
           openwrt_toolchain=toolchain-aarch64_cortex-a53_gcc-8.4.0_musl
@@ -73,10 +74,15 @@ jobs:
           echo '/home/runner/work/zroxy/zroxy/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64----------------------------------------------------------------------'
           ls $STAGING_DIR/bin/*
           
-          #make package/zroxy/{clean,compile}  V=s
+          cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/zroxy
+          
+          #make zroxy/{clean,compile}  V=s
           export CC="aarch64-openwrt-linux-musl -static -Os"
           cmake ..
-          make package/zroxy/compile CC=aarch64-openwrt-linux-musl LD=aarch64-openwrt-linux-musl-ld 
+          
+          [-f ./configure ]&&./configure  --host=$openwrt_architecture_host --enable-static
+          
+          make zroxy/compile CC=aarch64-openwrt-linux-musl LD=aarch64-openwrt-linux-musl-ld 
           ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/*
 
       - name: Upload compiled zroxy firmware
