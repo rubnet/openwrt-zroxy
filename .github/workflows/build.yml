@@ -32,13 +32,16 @@ jobs:
           #ls openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl*
           ls staging_dir/*
           openwrt_sdk_folder=~/openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64/
-          openwrt_architecture_host=arm-openwrt-linux-muslgnueabi
-          openwrt_toolchain=toolchain-arm_cortex-a53+vfpv3-d16_gcc-8.4.0_musl_eabi
+          openwrt_architecture_host=aarch64-openwrt-linux-musl
+          #arm-openwrt-linux-muslgnueabi
+          openwrt_toolchain=toolchain-aarch64_cortex-a53_gcc-8.4.0_musl
           PATH="$PATH:$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/bin/"
           export PATH
           
           STAGING_DIR="$openwrt_sdk_folder/staging_dir/$openwrt_toolchain/"
           export STAGING_DIR
+
+          ls $STAGING_DIR/bin/*
           
           #git clone https://github.com/openwrt/openwrt.git
           #cd openwrt
@@ -46,7 +49,7 @@ jobs:
           #git tag
           #git checkout openwrt-21.02
           ./scripts/feeds update -a
-          ./scripts/feeds install -a
+          #./scripts/feeds install -a
 
       - name: Clone zroxy repository
         run: |
@@ -57,10 +60,10 @@ jobs:
         run: |
           cd openwrt-sdk-21.02.7-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64
           # make menuconfig
-          grep zroxy .config
+          #grep zroxy .config
           # For example, enabling zroxy package via configuration
-          sed -i 's/^#CONFIG_PACKAGE_zroxy=y/CONFIG_PACKAGE_zroxy=y/' .config
-          grep zroxy .config
+          #sed -i 's/^#CONFIG_PACKAGE_zroxy=y/CONFIG_PACKAGE_zroxy=y/' .config
+          #grep zroxy .config
 
       - name: Compile OpenWRT with zroxy package
         run: |
