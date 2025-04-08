@@ -79,7 +79,7 @@ jobs:
           
           #make zroxy/{clean,compile}  V=s
           export CC="aarch64-openwrt-linux-musl -static -Os"
-          cmake ..
+          cmake 
           
           [-f ./configure ]&&./configure  --host=$openwrt_architecture_host --enable-static
           
